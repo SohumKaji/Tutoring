@@ -1,0 +1,75 @@
+9) 
+select DISTINCT People.name
+FROM People
+EXCEPT
+select DISTINCT People.name
+FROM Grades as G1, Grades as G2, People
+WHERE G1.cid = 'c4'
+and G2.cid = 'c4'
+and G1.pid <> G2.pid
+and People.id = G1.pid
+and G1.grade < G2.grade;
+
+10)
+CREATE VIEW HIGHER(name, id) AS 
+select DISTINCT People.name, People.id
+FROM Grades, People
+EXCEPT
+select DISTINCT People.name, People.id
+FROM Grades as G1, Grades as G2, People
+WHERE G1.cid = 'c4'
+and G2.cid = 'c4'
+and G1.pid <> G2.pid
+and People.id = G1.pid
+and G1.grade < G2.grade;
+
+SELECT DISTINCT People.name FROM People
+WHERE People.name not in (
+	SELECT DISTINCT People.name FROM HIGHER, Grades as G1, Grades as G2, People	
+	WHERE (G1.cid = 'c4'
+	and G2.cid = 'c4'
+	and G1.pid <> G2.pid
+	and HIGHER.id <> G2.pid
+	and People.id = G1.pid
+	and G1.grade < G2.grade)
+        OR People.id = HIGHER.id);
+
+11)
+select DISTINCT People.name
+FROM Courses as C1, Courses as C2, Courses as C3, Courses as C4,
+Grades as G1, Grades as G2, Grades as G3, Grades as G4,
+People
+WHERE C1.cid <> C2.cid
+and C1.cid <> C3.cid
+and C1.cid <> C4.cid
+and C2.cid <> C3.cid
+and C2.cid <> C4.cid
+and C3.cid <> C4.cid
+and G1.cid <> G2.cid
+and G1.cid <> G3.cid
+and G1.cid <> G4.cid
+and G2.cid <> G3.cid
+and G2.cid <> G4.cid
+and G3.cid <> G4.cid
+and C1.cid = G1.cid
+and C2.cid = G2.cid
+and C3.cid = G3.cid
+and C4.cid = G4.cid
+and G1.pid = People.id
+and G2.pid = People.id
+and G3.pid = People.id
+and G4.pid = People.id 
+and G1.grade >= 3.5
+and G2.grade >= 3.5
+and G3.grade >= 3.5
+and G4.grade >= 3.5;
+
+12)
+select DISTINCT People.name
+FROM Grades, People
+EXCEPT
+select DISTINCT People.name
+FROM Grades, People
+WHERE Grades.pid = People.id
+and Grades.grade < 3.5;
+
