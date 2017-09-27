@@ -1,10 +1,14 @@
 def Palindrome(x):
-	x = str(x)
-	for i in range(len(x)//2 - (len(x)//2)%2 + 1):
-		if(x[i] != x[-i-1]): return False
+	return list(x) == list(x)[::-1]
 
-	return True
+answer = []
 
+for x in range(100000, 1000000):
+	if(Palindrome(str(x)[:-5:-1])):
+		if(Palindrome(str(x+1)[:-6:-1])):
+			if(Palindrome(str(x+2)[-2:-6:-1])):
+				if(Palindrome(str(x+3))):
+					answer.append(str(x))
 
-y = raw_input("Enter a word, I'll check if it is a Palindrome: ")
-print(Palindrome(y))
+print "The possible values are: ", ', '.join(answer)
+	
