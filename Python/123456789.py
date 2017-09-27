@@ -1,14 +1,18 @@
 def check(num):
-    split = list(num)
-    
-    if(len(split) == 9 and len(set(split)) == len(split)): return True
-    return False
+    split = list(str(num))									#split the current integer into a list of digits
+    if(len(set(split)) == len(split)): return True						#if there are no repeat digits return True
+    return False										#Otherwise return false
 
 start = "0"
-while(not check(start)): start = input("Enter a 9 digit number where no digit appears twice: ")
+while(len(start) !=9 or not check(start)): 							#Take a valid input
+	start = raw_input("Enter a 9 digit number where no digit appears twice: ") 		
 
-start = int(start)
-finish = start + 1
-while((not check(str(finish))) or set(list(str(start))) != set(list(str(finish)))): finish +=1
+finish = int(start) + 1										#Set finish to the next highest integer after the input
+unused = [str(elem) for elem in range(0,10) if str(elem) not in list(start)].pop()		#Set Unused to the 1 digit from 0-9 inclusive that is not used
 
-print("The next highest 9-digit number with the same digits is: ", finish)
+while((not check(finish) or unused in str(finish)) and len(str(finish)) == 9): 			#if finish is start rearranged, we have our answer otherwise,
+	finish += 1										#take a look at the next integer. Stop if we exhaust 9 digit ints.
+	
+if(len(str(finish)) == 9): 									#Output
+	print "The next highest number created by rearranging", start, "is:", finish
+else: print "No Answer"
