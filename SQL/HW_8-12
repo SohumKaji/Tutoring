@@ -44,7 +44,10 @@ p3  |  c4       | 3.85
 
 9) 
 select DISTINCT People.name
-FROM People
+FROM People, Grades
+WHERE 
+People.id = Grades.pid
+and Grades.cid = 'c4'
 EXCEPT
 select DISTINCT People.name
 FROM Grades as G1, Grades as G2, People
@@ -54,10 +57,14 @@ and G1.pid <> G2.pid
 and People.id = G1.pid
 and G1.grade < G2.grade;
 
+
 10)
-CREATE VIEW HIGHER(name, id) AS 
+CREATE VIEW HIGH2 AS 
 select DISTINCT People.name, People.id
 FROM Grades, People
+WHERE 
+People.id = Grades.pid
+and Grades.cid = 'c4'
 EXCEPT
 select DISTINCT People.name, People.id
 FROM Grades as G1, Grades as G2, People
@@ -68,15 +75,24 @@ and People.id = G1.pid
 and G1.grade < G2.grade;
 
 SELECT DISTINCT People.name FROM People
-WHERE People.name not in (
-	SELECT DISTINCT People.name FROM HIGHER, Grades as G1, Grades as G2, People	
-	WHERE (G1.cid = 'c4'
+	WHERE People.name in 
+	(select DISTINCT People.name
+	FROM People, Grades
+	WHERE 
+	People.id = Grades.pid
+	and Grades.cid = 'c4'
+	EXCEPT
+	select DISTINCT People.name
+	FROM Grades as G1, Grades as G2, People, HIGH2
+	WHERE G1.cid = 'c4'
 	and G2.cid = 'c4'
 	and G1.pid <> G2.pid
-	and HIGHER.id <> G2.pid
 	and People.id = G1.pid
-	and G1.grade < G2.grade)
-        OR People.id = HIGHER.id);
+	and G1.grade < G2.grade
+        OR People.id = HIGH2.id);
+
+
+
 
 11)
 select DISTINCT People.name
