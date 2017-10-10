@@ -132,4 +132,3 @@ select DISTINCT People.name
 FROM Grades, People
 WHERE Grades.pid = People.id
 and Grades.grade < 3.5;
-
