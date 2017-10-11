@@ -5,8 +5,8 @@ from copy import copy
 
 
 y, y_discard = [], []
-X_discard, X_value, X_impute, X_sum = [], [], [], []
-
+X_discard, X_value, X_impute = [], [], []
+X_sum, X_sum_total = [0]*16, [0]*16
 #Massage Data
 def massage(x):
 	if( x == 'y'):
@@ -43,12 +43,11 @@ with open('house-votes-84.data') as f:
 				y_discard.append(1)
 			else:
 				y_discard.append(0)
-	
-			if(X_sum != []):
-				X_sum = [sum(elem) for elem in zip(X_sum, X_train)]
-			else:
-				X_sum = copy(X_train)
 
+		for ii in range(len(X_train)):	
+			if(X_train[ii] != '?'):
+				X_sum[ii] += X_train[ii]
+				X_sum_total[ii] += 1
 
 #ii) treat "missing" as if it is a value
 for elem in X_value:
@@ -58,7 +57,7 @@ for elem in X_value:
 
 
 #Find most common value for each feature
-X_sum = [1 if float(elem)/len(y_discard) >= .5 else 0 for elem in X_sum]
+X_sum = [1 if float(X_sum[ii])/X_sum_total[ii] >= .5 else 0 for ii in range(len(X_sum))]
 
 #iii) Impute missing values
 for elem in X_impute:
